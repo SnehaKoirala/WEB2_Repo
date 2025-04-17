@@ -1,0 +1,22 @@
+# Example GET request to the root endpoint
+GET http://localhost:5000/
+
+# Example GET request for Pokémon with ID 1
+GET http://localhost:5000/1
+
+# Example POST request to signup
+POST http://localhost:5000/signup
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123"
+}
+
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123"
+}

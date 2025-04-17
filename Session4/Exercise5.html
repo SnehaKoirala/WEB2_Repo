@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Pokeballs Are Magic</title>
+    </head>
+
+    <body onload="printTotalWeight()">
+        <script>
+            async function printTotalWeight() {
+                const responses = await Promise.all([
+                    getPokemon("pikachu"),
+                    getPokemon("bulbasaur"),
+                    getPokemon("charmander"),
+                    getPokemon("squirtle"),
+                    getPokemon("butterfree"),
+                    getPokemon("pidgeotto"),
+                ])
+                const promises = responses.map(response => response.json())
+                const pokemonList = await Promise.all(promises)
+                const totalWeight = pokemonList.reduce((weightSum, { weight }) => weightSum + weight, 0) / 10
+                console.log(totalWeight) // → 92.4
+            }
+
+            function getPokemon(name) {
+                return fetch("https://pokeapi.co/api/v2/pokemon/" + name)
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Authentication Example</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <hr />
+    <button onclick="getData()">Get Protected Data</button>
+
+    <script>
+        // Login function to authenticate and get a JWT
+        async function login() {
+            const username = document.querySelector("#username").value;
+            const password = document.querySelector("#password").value;
+            const response = await fetch("http://localhost:5000/login", {
+                headers: { "Content-Type": "application/json" },
+                method: "POST",
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                // Retrieve the JWT token from the "Authorization" header
+                const authString = await response.headers.get("Authorization");
+                const token = authString?.split(" ")[1]; // Extract the token from "Bearer token"
+                localStorage.setItem("jwt", token); // Save token in localStorage
+                alert("Login successful!");
+            } else {
+                alert("Login failed!");
+            }
+        }
+
+        // Get protected data using the JWT token
+        async function getData() {
+            const token = localStorage.getItem("jwt");
+            const response = await fetch("http://localhost:5000/protected", {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                alert(JSON.stringify(data)); // Display the protected data
+            } else {
+                alert("Error retrieving data!");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrive Pokemon</title>
+</head>
+<body>
+        <input type = "text" />
+        <button onclick = "getPokemon(document.querySelector('input').value)">Submit </button>
+
+        <p>Request status: <span id="message"></span></p>
+<div>
+    <img width = "200" height = "200"/>
+    <p>Id: <span id = "id"></span></p>
+    <p>Name: <span id = "name"></span></p>
+    <p> Type: <span id = "type"></span></p>
+</div>
+
+<script >
+
+function getPokemon(pokemon){
+    if(pokemon == "")
+        return
+
+const xhr  = new XMLHttpRequest()
+xhr.open("GET", "https://pokeapi.co/api/v2/pokemon/" + pokemon)
+xhr.onload = () => {
+	if(xhr.status == 200) {
+
+        document.querySelector("#message").innerText = "Success!"
+                        const pkmn = JSON.parse(xhr.responseText)
+                        document.querySelector("img").src = pkmn.sprites.front_default
+                        document.querySelector("#id").innerText = pkmn.id
+                        document.querySelector("#name").innerText = pkmn.name
+                        const primaryType = pkmn.types[0].type.name
+                        const secondaryType = pkmn.types[1]?.type.name
+                        document.querySelector("#type").innerText = secondaryType ? `${primaryType}/${secondaryType}` : primaryType
+                    } else {
+                        displayError("Response was not OK!")
+                    }
+    }
+xhr.onerror = () => console.log("Error!")
+xhr.send() 
+}
+
+
+function displayError(message){
+    document.querySelector("#message").innerText = message
+    document.querySelector("img").src = ""
+    document.querySelector("#id").innerText = ""
+    document.querySelector("#name").innerText = ""
+    document.querySelector("#type").innerText = ""
+}
+
+</script>
+</body>
+</html>
